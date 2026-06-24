@@ -7,7 +7,7 @@ description: Migrates Android applications from the old, legacy Google Mobile
   signatures to help determine migration steps. Use when migrating an existing
   Android codebase from the old, legacy GMA SDK to GMA Next-Gen SDK.
 metadata:
-  version: 1.0.0
+  version: 1.1.0
 ---
 
 # AI Migration Agent Instructions for the Google Mobile Ads SDK
@@ -19,7 +19,15 @@ Use this checklist to track your migration progress:
 *   **Configure Gradle**:
     -   [ ] Replace `com.google.android.gms:play-services-ads` with the latest
         stable version of
-        `com.google.android.libraries.ads.mobile.sdk:ads-mobile-sdk`.
+        `com.google.android.libraries.ads.mobile.sdk:ads-mobile-sdk`. If you
+        cannot access Maven directly, run the following command to fetch the
+        latest version. The version returned in the `latest` tag is the latest
+        version of the GMA Next-Gen SDK:
+
+        ```bash
+        curl -sS https://dl.google.com/dl/android/maven2/com/google/android/libraries/ads/mobile/sdk/ads-mobile-sdk/maven-metadata.xml | sed -n 's/.*<latest>\(.*\)<\/latest>.*/\1/p'
+        ```
+
     -   [ ] Update `minSdk` (24+) and `compileSdk` (34+).
     -   [ ] Exclude `play-services-ads` and `play-services-ads-lite` from all
         dependencies globally in the app-level build file to avoid duplicate
@@ -35,9 +43,6 @@ Use this checklist to track your migration progress:
 
 ## Core Migration Rules
 
-*   **SDK Versions**: **ALWAYS** look up and use the latest stable version for
-    `com.google.android.libraries.ads.mobile.sdk:ads-mobile-sdk`. Do not assume
-    a version number.
 *   **App ID Usage**: **Always** use the value of the
     `com.google.android.gms.ads.APPLICATION_ID` meta-data tag from
     `AndroidManifest.xml` for the `applicationId` in `InitializationConfig`.
@@ -50,8 +55,10 @@ Use this checklist to track your migration progress:
         `InitializationConfig.Builder.setRequestConfiguration()`. **Do not**
         call `MobileAds.setRequestConfiguration()` before initialization.
 *   **UI Threading**: **MANDATORY**: Callbacks in GMA-Next Gen SDK are invoked
-    on a background thread. Wrap UI-related operations (Toasts, View updates) in
-    `runOnUiThread {}` or `Dispatchers.Main.launch {}` within SDK callbacks.
+    on a background thread. **ALL UI-RELATED OPERATIONS** (e.g., Toasts, View
+    updates, Fragment transactions) **MUST** be wrapped in `runOnUiThread {}` or
+    `Dispatchers.Main.launch {}` within GMA SDK callbacks. SKIPPING THIS STEP
+    WILL CAUSE THE APPLICATION TO CRASH.
 *   **Mediation**: Classes implementing
     `com.google.android.gms.ads.mediation.Adapter` MUST continue using
     `com.google.android.gms.ads`.
