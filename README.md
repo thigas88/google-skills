@@ -26,6 +26,7 @@ repo to install.
 -   [**AlloyDB Basics**](./skills/cloud/alloydb-basics)
 -   [**BigQuery Basics**](./skills/cloud/bigquery-basics)
 -   [**BigQuery AI & ML**](./skills/cloud/bigquery-ai-ml)
+-   [**BigQuery BigFrames**](./skills/cloud/bigquery-bigframes)
 -   [**Bigtable Basics**](./skills/cloud/bigtable-basics)
 -   [**Cloud Run Basics**](./skills/cloud/cloud-run-basics)
 -   [**Cloud SQL Basics**](./skills/cloud/cloud-sql-basics)
